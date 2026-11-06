@@ -1,6 +1,40 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
+interface ActiveModalData {
+  src: string;
+  alt: string;
+  title: string;
+  subtitle: string;
+}
+
 export default function Projects() {
+  const [activeModal, setActiveModal] = useState<ActiveModalData | null>(null);
+
+  const closeModal = useCallback(() => {
+    setActiveModal(null);
+  }, []);
+
+  useEffect(() => {
+    if (!activeModal) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeModal, closeModal]);
+
   return (
     <section id="proyek" className="scroll-mt-24 space-y-10">
       <div>
@@ -8,7 +42,7 @@ export default function Projects() {
           Proyek Pilihan
         </h2>
         <p className="text-sm text-zinc-400 mt-1">
-          Aplikasi nyata yang dibangun dari baris kode murni, mengutamakan performa dan arsitektur data.
+          Aplikasi nyata yang dibangun dari baris kode murni, mengutamakan performa dan arsitektur data. Klik pada gambar untuk melihat screenshot resolusi penuh.
         </p>
       </div>
 
@@ -16,15 +50,55 @@ export default function Projects() {
         {/* ================= PROYEK 1: LAPORKUY ================= */}
         <article className="card-craft rounded-2xl overflow-hidden">
           <div className="bg-black/50 border-b border-white/[0.08] p-3 sm:p-6 flex items-center justify-center">
-            <div className="w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] bg-[#070709] shadow-2xl">
-              <Image
-                src="/img/laporkuy.png"
-                alt="LaporKuy — AI-Powered Civic-Tech Reporting Platform"
-                width={1024}
-                height={514}
-                className="w-full h-auto block object-contain"
-              />
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setActiveModal({
+                  src: "/img/laporkuy.png",
+                  alt: "LaporKuy — AI-Powered Civic-Tech Reporting Platform",
+                  title: "LaporKuy — AI-Powered Civic-Tech Platform",
+                  subtitle: "Kompetisi UNJ • Next.js 16 • Supabase Realtime • Multi-Model AI",
+                })
+              }
+              className="group relative w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] hover:border-emerald-500/50 bg-[#070709] shadow-2xl transition-all duration-300 cursor-zoom-in text-left focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              title="Klik untuk memperbesar screenshot LaporKuy"
+            >
+              <div className="overflow-hidden">
+                <Image
+                  src="/img/laporkuy.png"
+                  alt="LaporKuy — AI-Powered Civic-Tech Reporting Platform"
+                  width={1024}
+                  height={514}
+                  className="w-full h-auto block object-contain group-hover:scale-[1.015] transition-transform duration-300"
+                />
+              </div>
+
+              {/* Hover overlay hint */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center pointer-events-none">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-xl transform group-hover:scale-100 scale-95 transition-transform duration-200">
+                  <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                  <span>Klik untuk perbesar resolusi penuh</span>
+                </div>
+              </div>
+
+              {/* Badge indikator selalu keliatan di pojok kanan bawah */}
+              <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/10 text-[11px] font-mono text-zinc-300 group-hover:text-emerald-300 group-hover:border-emerald-500/30 transition-colors">
+                  <svg className="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Perbesar</span>
+                </span>
+              </div>
+            </button>
           </div>
 
           <div className="p-6 sm:p-8 space-y-6">
@@ -109,15 +183,55 @@ export default function Projects() {
         {/* ================= PROYEK 2: ONHADIR ================= */}
         <article className="card-craft rounded-2xl overflow-hidden">
           <div className="bg-black/50 border-b border-white/[0.08] p-3 sm:p-6 flex items-center justify-center">
-            <div className="w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] bg-[#070709] shadow-2xl">
-              <Image
-                src="/img/onhadir.png"
-                alt="OnHadir — Sistem Informasi Presensi Cerdas & Manajemen Kedisiplinan Siswa"
-                width={1024}
-                height={508}
-                className="w-full h-auto block object-contain"
-              />
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setActiveModal({
+                  src: "/img/onhadir.png",
+                  alt: "OnHadir — Sistem Informasi Presensi Cerdas & Manajemen Kedisiplinan Siswa",
+                  title: "OnHadir — Sistem Presensi & Kedisiplinan Siswa QR",
+                  subtitle: "Standar UKK RPL • Laravel 11 • Real-time QR Code • Mesin ID Card CR80",
+                })
+              }
+              className="group relative w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] hover:border-emerald-500/50 bg-[#070709] shadow-2xl transition-all duration-300 cursor-zoom-in text-left focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              title="Klik untuk memperbesar screenshot OnHadir"
+            >
+              <div className="overflow-hidden">
+                <Image
+                  src="/img/onhadir.png"
+                  alt="OnHadir — Sistem Informasi Presensi Cerdas & Manajemen Kedisiplinan Siswa"
+                  width={1024}
+                  height={508}
+                  className="w-full h-auto block object-contain group-hover:scale-[1.015] transition-transform duration-300"
+                />
+              </div>
+
+              {/* Hover overlay hint */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center pointer-events-none">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-xl transform group-hover:scale-100 scale-95 transition-transform duration-200">
+                  <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                  <span>Klik untuk perbesar resolusi penuh</span>
+                </div>
+              </div>
+
+              {/* Badge indikator selalu keliatan di pojok kanan bawah */}
+              <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/10 text-[11px] font-mono text-zinc-300 group-hover:text-emerald-300 group-hover:border-emerald-500/30 transition-colors">
+                  <svg className="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Perbesar</span>
+                </span>
+              </div>
+            </button>
           </div>
 
           <div className="p-6 sm:p-8 space-y-6">
@@ -204,15 +318,55 @@ export default function Projects() {
         {/* ================= PROYEK 3: SIPENLAT ================= */}
         <article className="card-craft rounded-2xl overflow-hidden">
           <div className="bg-black/50 border-b border-white/[0.08] p-3 sm:p-6 flex items-center justify-center">
-            <div className="w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] bg-[#070709] shadow-2xl">
-              <Image
-                src="/img/sipenlat.png"
-                alt="SIPENLAT — Sistem Informasi Peminjaman Laptop Lab"
-                width={1024}
-                height={592}
-                className="w-full h-auto block object-contain"
-              />
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setActiveModal({
+                  src: "/img/sipenlat.png",
+                  alt: "SIPENLAT — Sistem Informasi Peminjaman Laptop Lab",
+                  title: "SIPENLAT — Sistem Peminjaman Laptop Lab Komputer",
+                  subtitle: "SMK Darus Sa'adah • PHP 8.2 (PDO) • RBAC • Manajemen Aset Digital",
+                })
+              }
+              className="group relative w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] hover:border-emerald-500/50 bg-[#070709] shadow-2xl transition-all duration-300 cursor-zoom-in text-left focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              title="Klik untuk memperbesar screenshot SIPENLAT"
+            >
+              <div className="overflow-hidden">
+                <Image
+                  src="/img/sipenlat.png"
+                  alt="SIPENLAT — Sistem Informasi Peminjaman Laptop Lab"
+                  width={1024}
+                  height={592}
+                  className="w-full h-auto block object-contain group-hover:scale-[1.015] transition-transform duration-300"
+                />
+              </div>
+
+              {/* Hover overlay hint */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center pointer-events-none">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-xl transform group-hover:scale-100 scale-95 transition-transform duration-200">
+                  <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                  <span>Klik untuk perbesar resolusi penuh</span>
+                </div>
+              </div>
+
+              {/* Badge indikator selalu keliatan di pojok kanan bawah */}
+              <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/10 text-[11px] font-mono text-zinc-300 group-hover:text-emerald-300 group-hover:border-emerald-500/30 transition-colors">
+                  <svg className="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Perbesar</span>
+                </span>
+              </div>
+            </button>
           </div>
 
           <div className="p-6 sm:p-8 space-y-6">
@@ -281,15 +435,55 @@ export default function Projects() {
         {/* ================= PROYEK 4: KEDAIARYA ================= */}
         <article className="card-craft rounded-2xl overflow-hidden">
           <div className="bg-black/50 border-b border-white/[0.08] p-3 sm:p-6 flex items-center justify-center">
-            <div className="w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] bg-[#070709] shadow-2xl">
-              <Image
-                src="/img/kedaiarya.png"
-                alt="KedaiArya — Digital Ordering Platform & POS Kafe"
-                width={1024}
-                height={514}
-                className="w-full h-auto block object-contain"
-              />
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setActiveModal({
+                  src: "/img/kedaiarya.png",
+                  alt: "KedaiArya — Digital Ordering Platform & POS Kafe",
+                  title: "KedaiArya — Digital Ordering Platform & POS",
+                  subtitle: "Solusi Kasir Kafe UMKM • PHP Native • AJAX Fetch • MySQL Schema",
+                })
+              }
+              className="group relative w-full max-w-4xl rounded-xl overflow-hidden border border-white/[0.08] hover:border-emerald-500/50 bg-[#070709] shadow-2xl transition-all duration-300 cursor-zoom-in text-left focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              title="Klik untuk memperbesar screenshot KedaiArya"
+            >
+              <div className="overflow-hidden">
+                <Image
+                  src="/img/kedaiarya.png"
+                  alt="KedaiArya — Digital Ordering Platform & POS Kafe"
+                  width={1024}
+                  height={514}
+                  className="w-full h-auto block object-contain group-hover:scale-[1.015] transition-transform duration-300"
+                />
+              </div>
+
+              {/* Hover overlay hint */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center pointer-events-none">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-xl transform group-hover:scale-100 scale-95 transition-transform duration-200">
+                  <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                  <span>Klik untuk perbesar resolusi penuh</span>
+                </div>
+              </div>
+
+              {/* Badge indikator selalu keliatan di pojok kanan bawah */}
+              <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/10 text-[11px] font-mono text-zinc-300 group-hover:text-emerald-300 group-hover:border-emerald-500/30 transition-colors">
+                  <svg className="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Perbesar</span>
+                </span>
+              </div>
+            </button>
           </div>
 
           <div className="p-6 sm:p-8 space-y-6">
@@ -354,6 +548,79 @@ export default function Projects() {
           </div>
         </article>
       </div>
+
+      {/* ================= LIGHTBOX MODAL PREVIEW ================= */}
+      {activeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={closeModal}
+        >
+          <div
+            className="relative w-full max-w-6xl max-h-[92vh] flex flex-col rounded-2xl bg-[#0b0c10] border border-white/15 shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Bar */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-white/10 bg-white/[0.02]">
+              <div className="flex items-center gap-3 min-w-0 pr-4">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
+                <div className="min-w-0">
+                  <h4 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+                    {activeModal.title}
+                  </h4>
+                  <p className="text-xs text-zinc-400 truncate hidden sm:block">
+                    {activeModal.subtitle}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={activeModal.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono text-zinc-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                  title="Buka gambar asli di tab baru"
+                >
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  <span className="hidden sm:inline">Tab Baru</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10 transition-colors focus:outline-none"
+                  title="Tutup (Esc)"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Image Preview Container */}
+            <div className="relative flex-1 p-2 sm:p-5 overflow-auto flex items-center justify-center bg-black/60">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={activeModal.src}
+                alt={activeModal.alt}
+                className="max-w-full max-h-[74vh] w-auto h-auto object-contain rounded-lg shadow-2xl border border-white/5"
+              />
+            </div>
+
+            {/* Footer Bar */}
+            <div className="px-4 py-2 border-t border-white/10 bg-white/[0.01] flex items-center justify-between text-[11px] font-mono text-zinc-500">
+              <span>Tekan <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 text-[10px]">Esc</kbd> atau klik di luar untuk menutup</span>
+              <span className="hidden sm:inline text-zinc-400 font-sans">{activeModal.alt}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
